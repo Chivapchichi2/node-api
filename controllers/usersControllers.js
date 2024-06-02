@@ -19,16 +19,15 @@ export const signupUser = async (req, res, next) => {
 }
 
 export const changePassword = async (req, res, next) => {
-	console.log(req.body);
-	// const { oldPassword, newPassword } = req.body;
-	// const { id } = req.user;
+	const { oldPassword, newPassword } = req.body;
+	const { id: userId  } = req.user;
 	try {
-		const user = await usersServices.findUserById(req.user.id);
-		const compared = await user.comparePassword(req.body.oldPassword);
+		const user = await usersServices.findUserById(userId);
+		const compared = await user.comparePassword(oldPassword);
 		if (!compared) {
 			throw HttpError(403);
 		}
-		await usersServices.changePassword(req.user.id, req.body.newPassword);
+		await usersServices.changePassword(userId, newPassword);
 		res.sendStatus(204);
 
 	} catch (error) {
